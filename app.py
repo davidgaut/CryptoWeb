@@ -1,5 +1,6 @@
 
 import io
+from locale import currency
 import random
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -50,7 +51,6 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     # save the historical market data to a dataframe
     cm_values = cm.history(start="2020-09-21")
     cm_values
-    # fig = px.line(cm_values, y=["High","Close","Low"], x=cm_values.index,title=cm_name)
 
     fig = make_subplots(rows=2, cols=1)
     for col in ['Low','Close','High']:
@@ -67,8 +67,7 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     fig.update_yaxes(title_text="Units", row=2, col=1)
     fig.update_xaxes(title_text="Date", row=2, col=1)
     fig.update_layout(title=cm_name,height=1600//2, width=1200,
-                   xaxis_title='',
-                   yaxis_title='')
+                   xaxis_title='', yaxis_title='')
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     print(fig.data[0])
@@ -79,5 +78,5 @@ def cb():
     return plot_crypto(request.args.get('data'))
 
 @app.route('/CryptoPlot')
-def make_plot(cc='Bitcoin'):
-    return render_template('chartsajax.html',  graphJSON=plot_crypto(cc))
+def make_plot(cc='Bitcoin',currency=yf_dict.keys()):
+    return render_template('chartsajax.html',  graphJSON=plot_crypto(cc), currency=currency)
