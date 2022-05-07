@@ -27,3 +27,4 @@ kubectl logs $POD_NAME
 kubectl exec $POD_NAME -- env
 
 docker build -t crypto_flask_app .
+docker run -p 5000:5000 crypto_flask_app
