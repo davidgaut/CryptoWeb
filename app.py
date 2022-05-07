@@ -1,14 +1,7 @@
 
-import io
-import random
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
+# from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from plotly.subplots import make_subplots
 from flask import Flask, render_template, Response, request
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import pandas as pd
 import json
 import plotly
 import plotly.express as px
@@ -16,7 +9,6 @@ import yfinance as yf
 
 
 app = Flask(__name__)
-
 
 
 #%% Get Crypto Data 

@@ -25,3 +25,5 @@ kubectl describe pods
 kubectl proxy
 kubectl logs $POD_NAME
 kubectl exec $POD_NAME -- env
+
+docker build -t crypto_flask_app .
