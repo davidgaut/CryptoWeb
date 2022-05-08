@@ -1,15 +1,12 @@
 
-import io
-from locale import currency
-import random
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
+# import io
+# from locale import currency
+# import random
+# from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+# from matplotlib.figure import Figure
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from flask import Flask, render_template, Response, request
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import pandas as pd
 import json
 import plotly
 import plotly.express as px
@@ -19,10 +16,10 @@ import yfinance as yf
 app = Flask(__name__)
 
 
-
 #%% Get Crypto Data 
 # Yfinance Crypto Codes
-yf_dict = {'Bitcoin_Cash' 	:'BCH-USD',
+yf_dict = {
+'Bitcoin_Cash' 	:'BCH-USD',
 'Binance_Coin' 	            :'BNB-USD',
 'Bitcoin' 	                :'BTC-USD',
 'EOS.IO' 	                :'EOS-USD',
@@ -42,7 +39,6 @@ yf_dict = {'Bitcoin_Cash' 	:'BCH-USD',
 # def print_price_single():
 #     quotes, df = get_last_quote(df)
 #     return 'Last update at {:s}, the EU floating rate is {:.4f}.\n'.format(quotes)
-import plotly.graph_objects as go
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
     '''Plot a cryptocurrency TS'''
@@ -58,13 +54,13 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
             go.Scatter(y=cm_values[[col]].values.ravel(), x=cm_values.index, name=col),
             row=1, col=1
         )
-    fig.update_yaxes(title_text="Dollars", row=1, col=1)
 
     fig.add_trace(
         go.Scatter(y=cm_values[["Volume"]].values.ravel(), x=cm_values.index, name='Volume'),
         row=2, col=1
     )
-    fig.update_yaxes(title_text="Units", row=2, col=1)
+    fig.update_yaxes(title_text="Dollars", row=1, col=1)
+    fig.update_yaxes(title_text="Units", row=1, col=1)
     fig.update_xaxes(title_text="Date", row=2, col=1)
     fig.update_layout(title=cm_name,height=1600//2, width=1200,
                    xaxis_title='', yaxis_title='')
@@ -77,6 +73,6 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
 def cb():
     return plot_crypto(request.args.get('data'))
 
-@app.route('/CryptoPlot')
-def make_plot(cc='Bitcoin',currency=yf_dict.keys()):
-    return render_template('chartsajax.html',  graphJSON=plot_crypto(cc), currency=currency)
+@app.route('/Cryptoplot/<endpoint>')
+def make_plot(endpoint,currency=yf_dict.keys()):
+    return render_template('chartsajax.html',  graphJSON=plot_crypto(endpoint), currency=currency)

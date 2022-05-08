@@ -25,3 +25,7 @@ kubectl describe pods
 kubectl proxy
 kubectl logs $POD_NAME
 kubectl exec $POD_NAME -- env
+
+# with docker
+sudo docker build -t crypto_flask_app .
+sudo docker run -p 5000:5000 crypto_flask_app
