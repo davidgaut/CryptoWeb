@@ -1,19 +1,24 @@
-#
+#%% Main file for Cloud computing Project
 from get_bitcoins import get_last_quote
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, request
 import json
 import plotly
-import plotly.express as px
 import yfinance as yf
+from joblib import load
+from make_model import make_X 
 
+# Make App
 app = Flask(__name__)
+
+# Basic Prediction Model
+pipe = load('simple_model.joblib') 
 
 #%% Get Crypto Data 
 # Yfinance Crypto Codes
 yf_dict = {
-'Bitcoin_Cash' 	:'BCH-USD',
+'Bitcoin_Cash' 	            :'BCH-USD',
 'Binance_Coin' 	            :'BNB-USD',
 'Bitcoin' 	                :'BTC-USD',
 'EOS.IO' 	                :'EOS-USD',
@@ -72,9 +77,13 @@ def cb():
 def make_plot(endpoint,currency=yf_dict.keys()):
     return render_template('chartsajax.html',  graphJSON=plot_crypto(endpoint), currency=currency)
 
-# def cb():
-#     return plot_crypto(request.args.get('data'))
-
 @app.route('/history_intermediary', methods=['POST', 'GET'])
 def intermediary():
     return render_template('intermediary.html')
+
+
+# Make Prediction of Close price for each currency
+tickers    = yf_dict.values()
+X, y       = make_X(tickers)
+X_pred     = X.sort_index()[-len(tickers):]
+prediction = pipe.predict(X_pred)
