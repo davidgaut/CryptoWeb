@@ -1,6 +1,7 @@
 import os
 import psycopg2
-
+from flask import Flask
+app = Flask(__name__)
 
 def init_db():
     conn = psycopg2.connect(
