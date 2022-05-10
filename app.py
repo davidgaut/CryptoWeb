@@ -8,7 +8,7 @@ import plotly
 import yfinance as yf
 from joblib import load
 from make_model import make_X, yf_dict
-import db
+# import db
 
 
 # Make App
@@ -18,7 +18,7 @@ app = Flask(__name__)
 pipe = load('simple_model.joblib') 
 
 # Instantiate Database
-db.init_db()
+# db.init_db()
 
 #%% Get Crypto Data 
 # Last Quote
@@ -75,10 +75,10 @@ X, y       = make_X(tickers)
 X_pred     = X.sort_index()[-len(tickers):]
 prediction = pipe.predict(X_pred)
 
-@app.route('/prediction/', methods=['GET'])
-def prediction(text : str):
-    db.insert(text)
-    entities : Dict = {}
+# @app.route('/prediction/', methods=['GET'])
+# def prediction(text : str):
+#     db.insert(text)
+#     entities : Dict = {}
 
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
