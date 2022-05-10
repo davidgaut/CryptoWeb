@@ -3,6 +3,7 @@ FROM python:3.8
 # Creation of a working directory app
 WORKDIR /app
 # Copy all the files of this project inside the container
+EXPOSE 5000
 COPY . .
 # Installation of code dependencies
 RUN pip install -r requirements.txt

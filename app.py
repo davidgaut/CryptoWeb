@@ -8,7 +8,7 @@ import plotly
 import yfinance as yf
 from joblib import load
 from make_model import make_X, yf_dict
-# import db
+import db
 
 
 # Make App
@@ -18,7 +18,7 @@ app = Flask(__name__)
 pipe = load('simple_model.joblib') 
 
 # Instantiate Database
-# db.init_db()
+db.init_db()
 
 #%% Get Crypto Data 
 # Last Quote

@@ -1,9 +1,26 @@
 version: "3.3"
 services:
-  web:
+  api-service: # See https://dev.to/alissonzampietro/the-amazing-journey-of-docker-compose-17lj
     build: .
+    volumes:
+      - .:/code
     ports:
-      - "8000:5000"
-  redis:
-    image: "redis:alpine"
+      - "5000:5000"
+    environment: 
+        PORT: 5000
+        FLASK_DEBUG: 1
+  db:
+      image: postgres:14.1-alpine
+      restart: always
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      ports:
+        - "5432:5432"
+      volumes:
+        - /var/lib/postgresql/data
 
+volumes:
+  db:
+    driver: local
