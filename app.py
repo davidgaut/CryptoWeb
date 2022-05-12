@@ -8,7 +8,7 @@ import plotly
 import yfinance as yf
 from joblib import load
 from make_model import make_X, yf_dict
-import db
+#import db
 
 
 # Make App
@@ -18,11 +18,11 @@ app = Flask(__name__)
 pipe = load('simple_model.joblib') 
 
 # Instantiate Database
-db.init_db()
+#db.init_db()
 
 #%% Get Crypto Data 
 # Last Quote
-@app.route('/')
+@app.route('/')#,methods=['POST', 'GET'])
 def print_price_single():
     df = list()
     quotes, df = get_last_quote(df)
@@ -57,16 +57,14 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     return graphJSON
 
 @app.route('/history', methods=['POST', 'GET'])
-def cb():
-    return plot_crypto(request.args.get('data'))
+
+def history_test():
+    return render_template('chartsajax.html', graphJSON=plot_crypto('Bitcoin'))
 
 @app.route('/history/<endpoint>')
+
 def make_plot(endpoint,currency=yf_dict.keys()):
     return render_template('chartsajax.html',  graphJSON=plot_crypto(endpoint), currency=currency)
-
-@app.route('/history_intermediary', methods=['POST', 'GET'])
-def intermediary():
-    return render_template('intermediary.html')
 
 
 # Make Prediction of Close price for each currency
@@ -74,11 +72,6 @@ tickers    = yf_dict.values()
 X, y       = make_X(tickers)
 X_pred     = X.sort_index()[-len(tickers):]
 prediction = pipe.predict(X_pred)
-
-# @app.route('/prediction/', methods=['GET'])
-# def prediction(text : str):
-#     db.insert(text)
-#     entities : Dict = {}
 
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
