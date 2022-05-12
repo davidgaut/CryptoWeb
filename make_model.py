@@ -57,8 +57,10 @@ def make_X(tickers):
         tmp = yf.Ticker(tick).history(start="2020-09-21")
         tmp['Asset_ID'] = tick
         table = pd.concat((table,tmp))
-
-    table = table.drop(columns=['Dividends','Stock Splits'])
+    try:
+        table = table.drop(columns=['Dividends','Stock Splits'])
+    except Exception as e:
+        print('Nothing Dropped')
 
     X   = table.reset_index().iloc[1:]
     idx = X['Date']

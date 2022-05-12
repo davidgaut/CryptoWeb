@@ -19,12 +19,6 @@ pipe = load('simple_model.joblib')
 # Instantiate Database
 db.init_db()
 
-@app.route('/prediction/<text>', methods=['GET'])
-def prediction(text : str):
-    db.insert(text)
-    entities : Dict = {}
-    return json.dumps(entities)
-
 #%% Get Crypto Data 
 # Last Quote
 @app.route('/')
@@ -70,20 +64,26 @@ def make_plot(endpoint,currency=yf_dict.keys()):
     return render_template('chartsajax.html',  graphJSON=plot_crypto(endpoint), currency=currency)
 
 @app.route('/history_intermediary', methods=['POST', 'GET'])
-def intermediary():
-    return render_template('intermediary.html')
+def history_intermediary():
+    return render_template('history_intermediary.html')
 
+# Make predictions
+@app.route('/prediction_intermediary', methods=['POST', 'GET'])
+def prediction_intermediary():
+    return render_template('prediction_intermediary.html')
 
-# Make Prediction of Close price for each currency
-tickers    = yf_dict.values()
-X, y       = make_X(tickers)
-X_pred     = X.sort_index()[-len(tickers):]
-prediction = pipe.predict(X_pred)
-
-# @app.route('/prediction/', methods=['GET'])
-# def prediction(text : str):
-#     db.insert(text)
-#     entities : Dict = {}
+# Store prediction
+@app.route('/prediction/<currency>', methods=['GET'])
+def prediction(currency : str):
+    # Make Prediction of Close price for each currency
+    tickers    = list([currency])
+    X, y       = make_X(tickers)
+    X_pred     = X.sort_index()[-len(tickers):]
+    prediction = pipe.predict(X_pred)
+    prediction = round(prediction[0],4)
+    db.insert(currency.replace('-','_'),)
+    entities : Dict = {}
+    return render_template('chartsajax2.html',  prediction=prediction, currency=currency)
 
 
 def plot_crypto(cm_name,yf_dict=yf_dict):

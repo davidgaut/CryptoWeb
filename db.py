@@ -15,21 +15,21 @@ def init_db():
     cur = conn.cursor()
     cur.execute('DROP TABLE IF EXISTS observations;')
     cur.execute('CREATE TABLE observations (id serial PRIMARY KEY,'
-                                    'text varchar (150) NOT NULL,'
-                                    'date_added date DEFAULT CURRENT_TIMESTAMP);'
+                                    'currency varchar (150) NOT NULL, value REAL,'
+                                    'date_prediction date DEFAULT CURRENT_TIMESTAMP);'
                                     )
     conn.commit()
     cur.close()
     conn.close()
 
-def insert(text: str):
+def insert(currency: str, prediction: float):
     conn = psycopg2.connect(
         host=POSTGRES_HOST,
         database=POSTGRES_DB,
         user=POSTGRES_USER,
         password=POSTGRES_PASSWORD)
     cur = conn.cursor()
-    cur.execute(f"INSERT INTO observations (text) VALUES ('{text}')")
+    cur.execute(f"INSERT INTO observations (currency, value) VALUES ('{currency}',{prediction})")
     
     conn.commit()
     cur.close()
