@@ -30,6 +30,7 @@ def insert(text: str):
         password=POSTGRES_PASSWORD)
     cur = conn.cursor()
     cur.execute(f"INSERT INTO observations (text) VALUES ('{text}')")
+    
     conn.commit()
     cur.close()
     conn.close()

@@ -1,4 +1,4 @@
-version: "2.4"
+version: "2.2"
 services:
   api:
     build: .
@@ -17,3 +17,8 @@ services:
       - POSTGRES_DB=db
     ports:
       - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
