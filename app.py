@@ -81,10 +81,14 @@ def prediction(currency : str):
     X_pred     = X.sort_index()[-len(tickers):]
     prediction = pipe.predict(X_pred)
     prediction = round(prediction[0],4)
-    db.insert(currency.replace('-','_'),)
-    entities : Dict = {}
+    db.insert(currency.replace('-','_'),prediction)
     return render_template('chartsajax2.html',  prediction=prediction, currency=currency)
 
+@app.route('/prediction_history')
+def show_prediction_history():
+    data = db.list()
+    table = json.dumps(data,default=str)
+    return render_template('show_table.html',  table=table)
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
     '''Plot a cryptocurrency TS'''
@@ -92,7 +96,6 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     cm = yf.Ticker(yf_dict[cm_name])
     # save the historical market data to a dataframe
     cm_values = cm.history(start="2020-09-21")
-    cm_values
 
     fig = make_subplots(rows=2, cols=1)
     for col in ['Low','Close','High']:
