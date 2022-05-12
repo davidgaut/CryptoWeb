@@ -80,7 +80,9 @@
     </div>
 </body>
 <div id="chart" class="chart"></div>
-
+<form>
+    <input type="button" value="Go back!" onclick="history.back()">
+</form>
 <script>
     d = {{ graphJSON | safe }};
     //d.config={staticPlot: true};
