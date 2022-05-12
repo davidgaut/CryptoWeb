@@ -33,4 +33,3 @@ sudo docker run -p 5000:5000 crypto_flask_app
 # with docker-compose
 https://gitlab.com/ensae-dev/python-flask-app
 sudo docker-compose up -d
-sudo docker-compose up -d
