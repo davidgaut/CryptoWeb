@@ -87,8 +87,8 @@ def prediction(currency : str):
 @app.route('/prediction_history')
 def show_prediction_history():
     data = db.list()
-    table = json.dumps(data,default=str)
-    return render_template('show_table.html',  list=list)
+    list_ = json.dumps(data,default=str)
+    return render_template('show_table.html',  list=list_)
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
     '''Plot a cryptocurrency TS'''
