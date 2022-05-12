@@ -88,7 +88,7 @@ def prediction(currency : str):
 def show_prediction_history():
     data = db.list()
     table = json.dumps(data,default=str)
-    return render_template('show_table.html',  table=table)
+    return render_template('show_table.html',  list=list)
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
     '''Plot a cryptocurrency TS'''
