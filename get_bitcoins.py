@@ -7,8 +7,9 @@ def get_bitcoins():
 
 def get_last_quote(df):
     data          = get_bitcoins()
+    information   = data['disclaimer']
     time_update   = data['time']['updated']
     rate_float_eu = data['bpi']['EUR']['rate_float']
-    quotes = (time_update,rate_float_eu)
+    quotes = (time_update,rate_float_eu,information)
     df.append(quotes)
     return quotes, df

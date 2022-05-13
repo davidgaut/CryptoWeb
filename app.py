@@ -25,9 +25,10 @@ db.init_db()
 def print_price_single():
     df = list()
     quotes, df = get_last_quote(df)
-    current = 'Last update at {:s}, the € floating rate for the BITCOIN is {:.4f}\n'.format(*quotes)
+    current = 'Last update at {:s}, the EU floating rate is {:.4f}.\n'.format(*quotes)
+    info=quotes[2]
     print(current)
-    return render_template('page_index.html',current=current)
+    return render_template('page_index.html',current=current,info=info)
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
     '''Plot a cryptocurrency TS'''
@@ -114,3 +115,23 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     print(fig.data[0])
     return graphJSON
+
+from newsapi import NewsApiClient
+
+# Init
+newsapi = NewsApiClient(api_key='8b04a9d1d8314f3bacc0241959b7ae1d')
+
+# /v2/top-headlines
+NEWS_s = newsapi.get_top_headlines(q='bitcoin')
+
+# /v2/top-headlines/sources
+sources = newsapi.get_sources()
+
+
+
+
+@app.route('/prediction_news')
+def index():
+    news = NEWS_s
+    title = 'Bitcoin News'
+    return render_template('show_news.html', title = title,news = news)
