@@ -31,13 +31,13 @@
       list = {{ list | safe }};
         
         function GFG_FUN() {
-            var cols = [];
+            var cols = ['Currency','Value','Date'];
              
             for (var i = 0; i < list.length; i++) {
                 for (var k in list[i]) {
                     if (cols.indexOf(k) === -1) {
                         // Push all keys to the array
-                        cols.push(k);
+                        // cols.push(k);
                     }
                 }
             }
@@ -57,7 +57,7 @@
                 // Append columnName to the table row
                 tr.appendChild(theader);
             }
-             
+            var cols = [1,2,3]
             // Adding the data to the table
             for (var i = 0; i < list.length; i++) {
                  

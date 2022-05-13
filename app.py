@@ -2,13 +2,13 @@
 from get_bitcoins import get_last_quote
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 import json
 import plotly
 import yfinance as yf
 from joblib import load
 from make_model import make_X, yf_dict
-#import db
+import db
 
 # Make App
 app = Flask(__name__)
@@ -17,15 +17,15 @@ app = Flask(__name__)
 pipe = load('simple_model.joblib') 
 
 # Instantiate Database
-#db.init_db()
+db.init_db()
 
 #%% Get Crypto Data 
 # Last Quote
-@app.route('/')#,methods=['POST', 'GET'])
+@app.route('/')
 def print_price_single():
     df = list()
     quotes, df = get_last_quote(df)
-    current = 'Last update at {:s}, the EU floating rate is {:.4f}.\n'.format(*quotes)
+    current = 'Last update at {:s}, the € floating rate for the BITCOIN is {:.4f}\n'.format(*quotes)
     print(current)
     return render_template('page_index.html',current=current)
 
@@ -35,7 +35,6 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     cm = yf.Ticker(yf_dict[cm_name])
     # save the historical market data to a dataframe
     cm_values = cm.history(start="2020-09-21")
-    cm_values
 
     fig = make_subplots(rows=2, cols=1)
     for col in ['Low','Close','High']:
@@ -56,12 +55,10 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     return graphJSON
 
 @app.route('/history', methods=['POST', 'GET'])
-
 def history_test():
     return render_template('chartsajax.html', graphJSON=plot_crypto('Bitcoin'))
 
 @app.route('/history/<endpoint>')
-
 def make_plot(endpoint,currency=yf_dict.keys()):
     return render_template('chartsajax.html',  graphJSON=plot_crypto(endpoint), currency=currency)
 
