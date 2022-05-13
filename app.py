@@ -2,14 +2,13 @@
 from get_bitcoins import get_last_quote
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 import json
 import plotly
 import yfinance as yf
 from joblib import load
 from make_model import make_X, yf_dict
 import db
-
 
 # Make App
 app = Flask(__name__)
@@ -26,7 +25,7 @@ db.init_db()
 def print_price_single():
     df = list()
     quotes, df = get_last_quote(df)
-    current = 'Last update at {:s}, the EU floating rate is {:.4f}.\n'.format(*quotes)
+    current = 'Last update at {:s}, the € floating rate for the BITCOIN is {:.4f}\n'.format(*quotes)
     print(current)
     return render_template('page_index.html',current=current)
 
@@ -36,7 +35,6 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     cm = yf.Ticker(yf_dict[cm_name])
     # save the historical market data to a dataframe
     cm_values = cm.history(start="2020-09-21")
-    cm_values
 
     fig = make_subplots(rows=2, cols=1)
     for col in ['Low','Close','High']:
@@ -57,29 +55,40 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     return graphJSON
 
 @app.route('/history', methods=['POST', 'GET'])
-def cb():
-    return plot_crypto(request.args.get('data'))
+def history_test():
+    return render_template('chartsajax.html', graphJSON=plot_crypto('Bitcoin'))
 
 @app.route('/history/<endpoint>')
 def make_plot(endpoint,currency=yf_dict.keys()):
     return render_template('chartsajax.html',  graphJSON=plot_crypto(endpoint), currency=currency)
 
+
 @app.route('/history_intermediary', methods=['POST', 'GET'])
-def intermediary():
-    return render_template('intermediary.html')
+def history_intermediary():
+    return render_template('history_intermediary.html')
 
+# Make predictions
+@app.route('/prediction_intermediary', methods=['POST', 'GET'])
+def prediction_intermediary():
+    return render_template('prediction_intermediary.html')
 
-# Make Prediction of Close price for each currency
-tickers    = yf_dict.values()
-X, y       = make_X(tickers)
-X_pred     = X.sort_index()[-len(tickers):]
-prediction = pipe.predict(X_pred)
+# Store prediction
+@app.route('/prediction/<currency>', methods=['GET'])
+def prediction(currency : str):
+    # Make Prediction of Close price for each currency
+    tickers    = list([currency])
+    X, y       = make_X(tickers)
+    X_pred     = X.sort_index()[-len(tickers):]
+    prediction = pipe.predict(X_pred)
+    prediction = round(prediction[0],4)
+    db.insert(currency.replace('-','_'),prediction)
+    return render_template('chartsajax2.html',  prediction=prediction, currency=currency)
 
-# @app.route('/prediction/', methods=['GET'])
-# def prediction(text : str):
-#     db.insert(text)
-#     entities : Dict = {}
-
+@app.route('/prediction_history')
+def show_prediction_history():
+    data = db.list()
+    list_ = json.dumps(data,default=str)
+    return render_template('show_table.html',  list=list_)
 
 def plot_crypto(cm_name,yf_dict=yf_dict):
     '''Plot a cryptocurrency TS'''
@@ -87,7 +96,6 @@ def plot_crypto(cm_name,yf_dict=yf_dict):
     cm = yf.Ticker(yf_dict[cm_name])
     # save the historical market data to a dataframe
     cm_values = cm.history(start="2020-09-21")
-    cm_values
 
     fig = make_subplots(rows=2, cols=1)
     for col in ['Low','Close','High']:

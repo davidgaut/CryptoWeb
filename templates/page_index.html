@@ -2,15 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <meta name="authors" content="Gauthier, Bellanger, Bou Farhat, Deni">
     <title>ENSAE</title>
+
 </head>
-<body>
-   <h1>Welcome to the Mini Finance App</h1>
-    <li>{{ current }}.</li>
-    <h1>Menu</h1>
-    <li><a href="/history_intermediary">Histories</a></li>
-    <li><a href="/predictions">Predictions</a></li>
-    <li><a href="/callback/getStock">other</a></li>
+
+<body style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTF1Ciq_3pPCqWXBKDX-u-8BhxCV3RaORTnQ&usqp=CAU');
+            background-size: 100%;
+            background-repeat: no-repeat;
+            color: white">
+    
+    <header>
+        <h1 style="color:rgb(60, 160, 217)">Crypto Toolbox App</h1>
+        <h3 style="color:rgb(60, 160, 217)">>A project by David Gauthier, Boris Bellanger, Nathalie Bou Farhat, Giuseppe Deni</h3>  
+    </header>
+    
+    <div class="container">
+        
+        <section>
+            <p>A cryptocurrency is a tradable digital asset or digital form of money, built on blockchain technology that only exists online. Cryptocurrencies use encryption to authenticate and protect transactions, hence their name. There are currently over a 
+                thousand different cryptocurrencies in the world. Over the last few years, cryptocurrency prices have risen and then fallen. Crypto marketplaces do not guarantee that an investor is completing a purchase or trade at the optimal price. As a result, 
+                many investors take advantage of this by using arbitrage to find the difference in price across several markets</p>
+                <p>This Toolbox allows you to retrieve the price, volumes and predictions for your favourite crypto!</p>    
+            </section>
+
+            <li>{{ current }}.</li>
+    
+
+        <aside>
+            <h1 style="color:rgb(60, 160, 217); font-weight: bold; font-size: x-large;">Menu</h1>
+            <li><a href="/history" style="color:white; font-weight: bold; font-size: x-large;">Get your plots</a></li>
+            <li><a href="/prediction_intermediary" style="color:white; font-weight: bold; font-size: x-large;">Get your predictions</a></li>
+            <li><a href="/prediction_history" style="color:white; font-weight: bold; font-size: x-large;">Prediction History</a></li>
+        </aside>
+    
+    </div>  
 </body>
 </html>

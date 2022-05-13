@@ -4,3 +4,4 @@ pandas
 yfinance
 joblib
 sklearn
+psycopg2
