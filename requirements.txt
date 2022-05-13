@@ -5,3 +5,4 @@ yfinance
 joblib
 sklearn
 psycopg2
+newsapi-python
